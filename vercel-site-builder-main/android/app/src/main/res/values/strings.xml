@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mãe Gaia</string>
+    <string name="title_activity_main">Mãe Gaia</string>
+    <string name="package_name">com.suaempresa.maegaia</string>
+    <string name="custom_url_scheme">com.suaempresa.maegaia</string>
+</resources>

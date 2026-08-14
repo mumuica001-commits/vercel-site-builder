@@ -1,0 +1,6 @@
+{
+  "appId": "com.seuempresa.maegaia",
+  "appName": "Mãe Gaia",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
