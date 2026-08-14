@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Wine, Beer, Martini, GlassWater, ShoppingCart, X, Plus, Minus,
   Clock, Flame, Package, ChevronDown, Check, AlertTriangle, Boxes,
-  Sparkles, ArrowRight, Lock, ChevronLeft, CreditCard, QrCode, FileText,
-  Truck, Store, Copy, ShieldCheck, CheckCircle2, Building2, Search, Instagram,
+  Sparkles, ArrowRight, ChevronLeft, CreditCard, QrCode, FileText,
+  Truck, Store, Copy, ShieldCheck, CheckCircle2, Search, Instagram,
 } from "lucide-react";
 
-
-
 const DATAURI_CRISTALLIS_JABUTICABA = "/images/cristallis_jabuticaba.jpg";
-
 const DATAURI_CRISTALLIS_TANGERINA = "/images/cristallis_tangerina.jpg";
-
 const DATAURI_MILHETO_COQUETEL_MILHO = "/images/milheto_coquetel_milho.jpg";
 
 const IMG_CRISTALLIS_LIMAO = "/images/cristallis_limao_siciliano.jpg";
@@ -28,14 +24,8 @@ const IMG_CARVALHINHO_AMBURANA = "/images/carvalhinho_amburana.jpg";
 const IMG_CARVALHINHO_CARVALHO = "/images/carvalhinho_carvalho.jpg";
 const IMG_HERO_FAMILIA = "/images/familia_coqueteis.jpg";
 
-
-
-
 /* ---------------------------------------------------------------------
    Mãe Gaia — adega & distribuidora
-   Paleta: preto quente (#120F0B), dourado envelhecido (#D9A94B),
-   vinho (#8B2635), creme (#EFE7D6). Cada garrafa carrega um nº de lote:
-   a numeração dos cards não é decorativa, é o próprio rastreio de estoque.
 --------------------------------------------------------------------- */
 
 const CATEGORIES = [
@@ -57,7 +47,6 @@ const GRADIENTS = {
   bourbon: "from-[#8C5A1F] via-[#452C0E] to-[#120F0B]",
 };
 
-// Paleta viva por categoria — usada em badges, bordas, ícones e barras de estoque
 const ACCENTS = {
   licores:    { text: "text-[#E8698A]", border: "border-[#E8698A]/40", borderHover: "hover:border-[#E8698A]/70", bg: "bg-[#E8698A]/10", bar: "from-[#B33957] to-[#E8698A]", pill: "border-[#E8698A] bg-[#E8698A]/10 text-[#E8698A]" },
   coqueteis:  { text: "text-[#F0C572]", border: "border-[#F0C572]/40", borderHover: "hover:border-[#F0C572]/70", bg: "bg-[#F0C572]/10", bar: "from-[#D9A94B] to-[#F0C572]", pill: "border-[#F0C572] bg-[#F0C572]/10 text-[#F0C572]" },
@@ -66,8 +55,6 @@ const ACCENTS = {
   bourbon:    { text: "text-[#E0A24C]", border: "border-[#E0A24C]/40", borderHover: "hover:border-[#E0A24C]/70", bg: "bg-[#E0A24C]/10", bar: "from-[#B37A2E] to-[#E0A24C]", pill: "border-[#E0A24C] bg-[#E0A24C]/10 text-[#E0A24C]" },
 };
 
-// ⚠️ PREÇO ainda é PLACEHOLDER — troquem pelos valores reais de vocês.
-// Estoque dos 3 produtos: 100 unidades cada (confirmado por vocês).
 const PRODUCTS = [
   {
     id: 1,
@@ -75,10 +62,8 @@ const PRODUCTS = [
     nome: "Cristallis — Licor Cristalizado de Jabuticaba",
     categoria: "licores",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 65.9, // TODO: preço real
-    descontoAtacado: 0,
-    minAtacado: 6,
-    estoque: 100, // confirmado por vocês
+    preco: 65.9,
+    estoque: 100,
     estoqueMax: 100,
     imagem: DATAURI_CRISTALLIS_JABUTICABA,
   },
@@ -88,10 +73,8 @@ const PRODUCTS = [
     nome: "Cristallis Dolce — Licor de Tangerina",
     categoria: "licores",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 65.9, // TODO: preço real
-    descontoAtacado: 0,
-    minAtacado: 6,
-    estoque: 100, // confirmado por vocês
+    preco: 65.9,
+    estoque: 100,
     estoqueMax: 100,
     imagem: DATAURI_CRISTALLIS_TANGERINA,
   },
@@ -101,10 +84,8 @@ const PRODUCTS = [
     nome: "Milheto — Coquetel de Milho",
     categoria: "coqueteis",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 49.8, // TODO: preço real
-    descontoAtacado: 0,
-    minAtacado: 12,
-    estoque: 100, // confirmado por vocês
+    preco: 49.8,
+    estoque: 100,
     estoqueMax: 100,
     imagem: DATAURI_MILHETO_COQUETEL_MILHO,
   },
@@ -114,9 +95,7 @@ const PRODUCTS = [
     nome: "Cristallis Dolce — Licor Cristalizado de Limão Siciliano",
     categoria: "licores",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 65.9,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 65.9,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_CRISTALLIS_LIMAO,
@@ -127,9 +106,7 @@ const PRODUCTS = [
     nome: "Cristallis Dolce — Licor de Cachaça",
     categoria: "licores",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 65.9,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 65.9,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_CRISTALLIS_CACHACA,
@@ -140,9 +117,7 @@ const PRODUCTS = [
     nome: "Limoncello — Licor Fino de Limão Siciliano",
     categoria: "licores",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 53.8,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 53.8,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_LIMONCELLO,
@@ -153,9 +128,7 @@ const PRODUCTS = [
     nome: "Amaruka — Coquetel de Marula",
     categoria: "coqueteis",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 59.9,
-    descontoAtacado: 0,
-    minAtacado: 12,
+    preco: 59.9,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_AMARUKA,
@@ -166,9 +139,7 @@ const PRODUCTS = [
     nome: "ChocoAvelã — Coquetel Alcoólico",
     categoria: "coqueteis",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 55.7,
-    descontoAtacado: 0,
-    minAtacado: 12,
+    preco: 55.7,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_CHOCOAVELA,
@@ -179,9 +150,7 @@ const PRODUCTS = [
     nome: "DoceLeite — Coquetel Alcoólico",
     categoria: "coqueteis",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 55.7,
-    descontoAtacado: 0,
-    minAtacado: 12,
+    preco: 55.7,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_DOCELEITE,
@@ -192,9 +161,7 @@ const PRODUCTS = [
     nome: "Caipiroska — Batida de Limão com Vodka",
     categoria: "coqueteis",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 32.9,
-    descontoAtacado: 0,
-    minAtacado: 12,
+    preco: 32.9,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_CAIPIROSKA,
@@ -205,9 +172,7 @@ const PRODUCTS = [
     nome: "Old Gold — Destilado de Cereais Envelhecido",
     categoria: "bourbon",
     origem: "Gaia Bebidas Artesanais",
-    precoVarejo: 89.9,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 89.9,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_OLD_GOLD,
@@ -218,9 +183,7 @@ const PRODUCTS = [
     nome: "Gaia Vodka — Álcool de Cereais Tricamada",
     categoria: "vodka",
     origem: "Gaia Bebidas Artesanais",
-    precoVarejo: 54.8,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 54.8,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_GAIA_VODKA,
@@ -231,9 +194,7 @@ const PRODUCTS = [
     nome: "CocoBom — Coquetel de Coco",
     categoria: "coqueteis",
     origem: "Gaia Bebidas Artesanais",
-    precoVarejo: 49.8,
-    descontoAtacado: 0,
-    minAtacado: 12,
+    preco: 49.8,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_COCOBOM,
@@ -244,9 +205,7 @@ const PRODUCTS = [
     nome: "Cachaça Carvalhinho Amburana",
     categoria: "cachaca",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 69.8,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 69.8,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_CARVALHINHO_AMBURANA,
@@ -257,9 +216,7 @@ const PRODUCTS = [
     nome: "Cachaça Carvalhinho Carvalho",
     categoria: "cachaca",
     origem: "Mãe Gaia Bebidas Especiais",
-    precoVarejo: 69.8,
-    descontoAtacado: 0,
-    minAtacado: 6,
+    preco: 69.8,
     estoque: 100,
     estoqueMax: 100,
     imagem: IMG_CARVALHINHO_CARVALHO,
@@ -281,18 +238,16 @@ function stockStatus(available, max) {
 const pad = (n) => String(n).padStart(2, "0");
 
 export default function LoteNoturno() {
-  const [mode, setMode] = useState("varejo"); // 'varejo' | 'atacado'
   const [category, setCategory] = useState("todos");
   const [searchQuery, setSearchQuery] = useState("");
-  const [cart, setCart] = useState({}); // id -> qty
+  const [cart, setCart] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState(null);
-  
 
   // -------- checkout / pagamento --------
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState("entrega"); // 'entrega' | 'pagamento' | 'confirmacao'
-  const [deliveryMethod, setDeliveryMethod] = useState("entrega"); // 'entrega' | 'retirada'
+  const [checkoutStep, setCheckoutStep] = useState("entrega");
+  const [deliveryMethod, setDeliveryMethod] = useState("entrega");
   const [form, setForm] = useState({ nome: "", documento: "", telefone: "", cep: "", endereco: "", cidade: "", estado: "" });
   const [paymentMethod, setPaymentMethod] = useState("pix");
   const [cardForm, setCardForm] = useState({ numero: "", nomeCartao: "", validade: "", cvv: "", parcelas: "1" });
@@ -359,18 +314,6 @@ export default function LoteNoturno() {
     () => PRODUCTS.reduce((sum, p) => sum + p.estoque, 0),
     []
   );
-  const raroCount = useMemo(() => PRODUCTS.filter((p) => p.estoque <= 3).length, []);
-
-  // Estatísticas do programa de atacado, calculadas a partir dos produtos reais
-  const wholesaleStats = useMemo(() => {
-    const minUnidades = Math.min(...PRODUCTS.map((p) => p.minAtacado));
-    const maxUnidades = Math.max(...PRODUCTS.map((p) => p.minAtacado));
-    const maxDesconto = Math.max(...PRODUCTS.map((p) => p.descontoAtacado));
-    return {
-      unidadesLabel: minUnidades === maxUnidades ? `${minUnidades}` : `${minUnidades}–${maxUnidades}`,
-      descontoLabel: `${Math.round(maxDesconto * 100)}%`,
-    };
-  }, []);
 
   function addToCart(product, qty) {
     const current = cart[product.id] || 0;
@@ -397,34 +340,20 @@ export default function LoteNoturno() {
     setCart((c) => ({ ...c, [id]: clamped }));
   }
 
-  function lineUnitPrice(product, qty) {
-    if (mode === "atacado" && qty >= product.minAtacado) {
-      return product.precoVarejo * (1 - product.descontoAtacado);
-    }
-    return product.precoVarejo;
-  }
-
   const cartEntries = Object.entries(cart).map(([id, qty]) => {
     const product = productsById[id];
-    const unit = lineUnitPrice(product, qty);
+    const unit = product.preco;
     return { product, qty, unit, subtotal: unit * qty };
   });
 
   const cartCount = cartEntries.reduce((s, e) => s + e.qty, 0);
   const cartTotal = cartEntries.reduce((s, e) => s + e.subtotal, 0);
-  const atacadoSavings = cartEntries.reduce((s, e) => {
-    if (mode === "atacado" && e.qty >= e.product.minAtacado) {
-      return s + (e.product.precoVarejo - e.unit) * e.qty;
-    }
-    return s;
-  }, 0);
 
   if (checkoutOpen) {
     return (
       <CheckoutPage
         checkoutStep={checkoutStep}
         setCheckoutStep={setCheckoutStep}
-        mode={mode}
         deliveryMethod={deliveryMethod}
         setDeliveryMethod={setDeliveryMethod}
         form={form}
@@ -436,7 +365,6 @@ export default function LoteNoturno() {
         reservationSeconds={reservationSeconds}
         cartEntries={cartEntries}
         cartTotal={cartTotal}
-        atacadoSavings={atacadoSavings}
         orderNumber={orderNumber}
         confirmedEntries={confirmedEntries}
         confirmedTotal={confirmedTotal}
@@ -452,14 +380,6 @@ export default function LoteNoturno() {
   return (
     <div className="min-h-screen w-full bg-[#120F0B] text-[#EFE7D6] font-body">
       <ThemeStyles />
-
-      {/* ---------------- FAIXA DE PROMOÇÃO ---------------- */}
-      <div className="bg-gradient-to-r from-[#B3872F] via-[#D9A94B] to-[#E3963E] text-[#120F0B]">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-4 py-2 text-center text-xs font-medium sm:px-8">
-          <Truck className="h-3.5 w-3.5 shrink-0" />
-          Frete grátis em pedidos de atacado acima de {formatBRL(500)} · Entrega discreta e segura
-        </div>
-      </div>
 
       {/* ---------------- HEADER ---------------- */}
       <header className="sticky top-0 z-30 border-b border-[#D9A94B]/15 bg-[#120F0B]/95 backdrop-blur">
@@ -485,31 +405,6 @@ export default function LoteNoturno() {
           </div>
 
           <div className="ml-auto flex items-center gap-3 sm:gap-5">
-            {/* Alternador Varejo / Atacado */}
-            <div className="relative flex items-center rounded-full border border-[#D9A94B]/25 bg-[#1B1712] p-1 text-xs sm:text-sm">
-              <button
-                onClick={() => setMode("varejo")}
-                className={`relative z-10 rounded-full px-3 py-1.5 font-medium transition-colors sm:px-4 ${
-                  mode === "varejo" ? "text-[#120F0B]" : "text-[#9C9584] hover:text-[#EFE7D6]"
-                }`}
-              >
-                Varejo
-              </button>
-              <button
-                onClick={() => setMode("atacado")}
-                className={`relative z-10 rounded-full px-3 py-1.5 font-medium transition-colors sm:px-4 ${
-                  mode === "atacado" ? "text-[#120F0B]" : "text-[#9C9584] hover:text-[#EFE7D6]"
-                }`}
-              >
-                Atacado
-              </button>
-              <span
-                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-gradient-to-r from-[#D9A94B] to-[#F0C572] transition-all duration-300 ${
-                  mode === "varejo" ? "left-1" : "left-[calc(50%+2px)]"
-                }`}
-              />
-            </div>
-
             <button
               onClick={() => setCartOpen(true)}
               className="relative flex items-center gap-2 rounded-full border border-[#D9A94B]/30 bg-[#1B1712] px-3 py-2 text-sm text-[#EFE7D6] transition-colors hover:border-[#D9A94B]/60 sm:px-4"
@@ -524,11 +419,6 @@ export default function LoteNoturno() {
             </button>
           </div>
         </div>
-        {mode === "atacado" && (
-          <div className="border-t border-[#D9A94B]/10 bg-[#1B1712] px-5 py-1.5 text-center font-mono text-[11px] uppercase tracking-wider text-[#D9A94B] sm:px-8">
-            Modo atacado ativo — descontos aplicados ao atingir a quantidade mínima por lote
-          </div>
-        )}
       </header>
 
       {/* ---------------- HERO ---------------- */}
@@ -550,10 +440,9 @@ export default function LoteNoturno() {
               <p className="mt-5 max-w-xl text-sm leading-relaxed text-[#B3AC9B] sm:text-base">
                 Licores artesanais, coquetéis engarrafados e destilados especiais, feitos em lotes
                 pequenos pela Mãe Gaia Bebidas Especiais. Sem reposição automática — o que está
-                disponível é o que existe. Compre por unidade ou feche caixa em condição de atacado.
+                disponível é o que existe.
               </p>
 
-              {/* Ofertas sempre disponíveis */}
               <div className="animate-fadeUp mt-8 inline-flex items-center gap-4 rounded-2xl border border-[#D9A94B]/20 bg-gradient-to-br from-[#1B1712] to-[#221C15] px-5 py-4 seal-shadow">
                 <CheckCircle2 className="h-5 w-5 shrink-0 text-[#D9A94B]" />
                 <div>
@@ -571,7 +460,7 @@ export default function LoteNoturno() {
                   <ShieldCheck className="h-4 w-4 text-[#D9A94B]" /> Procedência garantida
                 </div>
                 <div className="flex items-center gap-2">
-                  <Package className="h-4 w-4 text-[#D9A94B]" /> Caixa fechada c/ desconto
+                  <Package className="h-4 w-4 text-[#D9A94B]" /> Embalagens seguras para envio
                 </div>
               </div>
 
@@ -644,7 +533,6 @@ export default function LoteNoturno() {
             <ProductCard
               key={p.id}
               product={p}
-              mode={mode}
               inCart={cart[p.id] || 0}
               onAdd={(qty) => addToCart(p, qty)}
             />
@@ -653,37 +541,6 @@ export default function LoteNoturno() {
         {filtered.length === 0 && (
           <p className="py-16 text-center text-sm text-[#8A8377]">Nenhum lote nesta categoria no momento.</p>
         )}
-      </section>
-
-      {/* ---------------- PROGRAMA ATACADO ---------------- */}
-      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8">
-        <div className="rounded-3xl border border-[#D9A94B]/15 bg-gradient-to-br from-[#1B1712] to-[#221C15] p-8 seal-shadow sm:p-12">
-          <div className="flex flex-wrap items-start gap-6">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-r from-[#D9A94B] to-[#F0C572]">
-              <Package className="h-6 w-6 text-[#120F0B]" />
-            </div>
-            <div className="min-w-64 flex-1">
-              <h3 className="font-display text-3xl text-[#EFE7D6]">Programa Atacado</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#9C9584] sm:text-base">
-                Restaurantes, bares, distribuidores e revendedores. Ao atingir a caixa fechada do
-                rótulo, o preço muda automaticamente com{" "}
-                <span className="font-semibold text-[#D9A94B]">até {wholesaleStats.descontoLabel} de desconto</span>.
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              {[
-                { n: wholesaleStats.unidadesLabel, l: "unid. mín." },
-                { n: wholesaleStats.descontoLabel, l: "off máx." },
-                { n: "48h", l: "entrega" },
-              ].map((k) => (
-                <div key={k.l} className="rounded-xl border border-[#D9A94B]/15 bg-[#120F0B]/50 px-4 py-3">
-                  <p className="font-display text-2xl text-[#D9A94B]">{k.n}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-[#7A7566]">{k.l}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* ---------------- RODAPÉ ---------------- */}
@@ -731,9 +588,6 @@ export default function LoteNoturno() {
             <div className="flex items-center justify-between border-b border-[#D9A94B]/20 px-5 py-4">
               <div>
                 <p className="font-display text-lg text-[#EFE7D6]">Sua seleção</p>
-                <p className="font-mono text-[11px] uppercase tracking-widest text-[#D9A94B]/70">
-                  modo {mode === "atacado" ? "atacado" : "varejo"}
-                </p>
               </div>
               <button onClick={() => setCartOpen(false)} className="rounded-full p-2 text-[#EFE7D6]/60 hover:bg-[#D9A94B]/10 hover:text-[#D9A94B]">
                 <X className="h-5 w-5" />
@@ -748,86 +602,64 @@ export default function LoteNoturno() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {cartEntries.map(({ product, qty, unit, subtotal }) => {
-                    const atacadoAtivo = mode === "atacado" && qty >= product.minAtacado;
-                    const faltam = product.minAtacado - qty;
-                    return (
-                      <div key={product.id} className="rounded-xl border border-[#D9A94B]/20 bg-[#1B1712] p-4">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-start gap-3">
-                            {product.imagem && (
-                              <img
-                                src={product.imagem}
-                                alt={product.nome}
-                                loading="lazy"
-                                className="h-16 w-12 flex-none rounded-md object-cover ring-1 ring-[#D9A94B]/25"
-                              />
-                            )}
-                            <div>
-                              <p className="font-mono text-[10px] uppercase tracking-widest text-[#D9A94B]/60">Lote {product.lote}</p>
-                              <p className="font-display text-base text-[#EFE7D6]">{product.nome}</p>
-                            </div>
+                  {cartEntries.map(({ product, qty, unit, subtotal }) => (
+                    <div key={product.id} className="rounded-xl border border-[#D9A94B]/20 bg-[#1B1712] p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3">
+                          {product.imagem && (
+                            <img
+                              src={product.imagem}
+                              alt={product.nome}
+                              loading="lazy"
+                              className="h-16 w-12 flex-none rounded-md object-cover ring-1 ring-[#D9A94B]/25"
+                            />
+                          )}
+                          <div>
+                            <p className="font-mono text-[10px] uppercase tracking-widest text-[#D9A94B]/60">Lote {product.lote}</p>
+                            <p className="font-display text-base text-[#EFE7D6]">{product.nome}</p>
                           </div>
-                          <button onClick={() => setQty(product.id, 0)} className="text-[#EFE7D6]/40 hover:text-[#C2495F]">
-                            <X className="h-4 w-4" />
+                        </div>
+                        <button onClick={() => setQty(product.id, 0)} className="text-[#EFE7D6]/40 hover:text-[#C2495F]">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2 rounded-full border border-[#D9A94B]/30 bg-[#120F0B] px-1.5 py-1">
+                          <button
+                            onClick={() => setQty(product.id, qty - 1)}
+                            className="rounded-full p-1 text-[#D9A94B] hover:bg-[#D9A94B]/15"
+                          >
+                            <Minus className="h-3.5 w-3.5" />
+                          </button>
+                          <span className="w-6 text-center font-mono text-sm text-[#EFE7D6]">{qty}</span>
+                          <button
+                            onClick={() => setQty(product.id, qty + 1)}
+                            disabled={qty >= product.estoque}
+                            className="rounded-full p-1 text-[#D9A94B] hover:bg-[#D9A94B]/15 disabled:cursor-not-allowed disabled:opacity-30"
+                          >
+                            <Plus className="h-3.5 w-3.5" />
                           </button>
                         </div>
-
-                        <div className="mt-3 flex items-center justify-between">
-                          <div className="flex items-center gap-2 rounded-full border border-[#D9A94B]/30 bg-[#120F0B] px-1.5 py-1">
-                            <button
-                              onClick={() => setQty(product.id, qty - 1)}
-                              className="rounded-full p-1 text-[#D9A94B] hover:bg-[#D9A94B]/15"
-                            >
-                              <Minus className="h-3.5 w-3.5" />
-                            </button>
-                            <span className="w-6 text-center font-mono text-sm text-[#EFE7D6]">{qty}</span>
-                            <button
-                              onClick={() => setQty(product.id, qty + 1)}
-                              disabled={qty >= product.estoque}
-                              className="rounded-full p-1 text-[#D9A94B] hover:bg-[#D9A94B]/15 disabled:cursor-not-allowed disabled:opacity-30"
-                            >
-                              <Plus className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-mono text-sm font-semibold text-[#EFE7D6]">{formatBRL(subtotal)}</p>
-                            <p className="font-mono text-[10px] text-[#EFE7D6]/45">{formatBRL(unit)} / un.</p>
-                          </div>
+                        <div className="text-right">
+                          <p className="font-mono text-sm font-semibold text-[#EFE7D6]">{formatBRL(subtotal)}</p>
+                          <p className="font-mono text-[10px] text-[#EFE7D6]/45">{formatBRL(unit)} / un.</p>
                         </div>
-
-                        {qty >= product.estoque && (
-                          <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] text-[#E8698A]">
-                            <AlertTriangle className="h-3 w-3" /> limite do estoque disponível atingido
-                          </p>
-                        )}
-
-                        {mode === "atacado" && (
-                          atacadoAtivo ? (
-                            <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] text-[#D9A94B]">
-                              <Check className="h-3 w-3" /> preço de atacado aplicado (-{Math.round(product.descontoAtacado * 100)}%)
-                            </p>
-                          ) : (
-                            <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] text-[#EFE7D6]/45">
-                              <Lock className="h-3 w-3" /> faltam {faltam} un. para desbloquear atacado
-                            </p>
-                          )
-                        )}
                       </div>
-                    );
-                  })}
+
+                      {qty >= product.estoque && (
+                        <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] text-[#E8698A]">
+                          <AlertTriangle className="h-3 w-3" /> limite do estoque disponível atingido
+                        </p>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
 
             {cartEntries.length > 0 && (
               <div className="border-t border-[#D9A94B]/20 px-5 py-5">
-                {atacadoSavings > 0 && (
-                  <div className="mb-3 flex items-center justify-between font-mono text-xs text-[#D9A94B]">
-                    <span>economia de atacado</span>
-                    <span>- {formatBRL(atacadoSavings)}</span>
-                  </div>
-                )}
                 <div className="mb-4 flex items-center justify-between">
                   <p className="font-display text-lg text-[#EFE7D6]">Total</p>
                   <p className="font-mono text-xl font-bold text-[#EFE7D6]">{formatBRL(cartTotal)}</p>
@@ -865,9 +697,9 @@ function ThemeStyles() {
 }
 
 function CheckoutPage({
-  checkoutStep, setCheckoutStep, mode, deliveryMethod, setDeliveryMethod,
+  checkoutStep, setCheckoutStep, deliveryMethod, setDeliveryMethod,
   form, setForm, paymentMethod, setPaymentMethod, cardForm, setCardForm,
-  reservationSeconds, cartEntries, cartTotal, atacadoSavings, orderNumber,
+  reservationSeconds, cartEntries, cartTotal, orderNumber,
   confirmedEntries, confirmedTotal, finalizePayment, closeCheckoutAndReset,
   setCheckoutOpen, setCartOpen, setToast,
 }) {
@@ -903,7 +735,6 @@ function CheckoutPage({
       )}
 
       <div className="relative mx-auto max-w-5xl w-full px-4 py-6 sm:px-8 sm:py-12 overflow-x-hidden">
-        {/* Indicador de etapas — travado para não estourar no mobile */}
         <div className="mb-8 flex w-full items-center justify-between gap-1 overflow-hidden">
           {[
             { id: "entrega", n: "01", label: "Entrega" },
@@ -960,7 +791,7 @@ function CheckoutPage({
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <Field label="Nome completo" value={form.nome} onChange={(v) => setForm((f) => ({ ...f, nome: v }))} full />
                 <Field
-                  label={mode === "atacado" ? "CNPJ" : "CPF"}
+                  label="CPF"
                   value={form.documento}
                   onChange={(v) => setForm((f) => ({ ...f, documento: v }))}
                 />
@@ -974,13 +805,6 @@ function CheckoutPage({
                   </>
                 )}
               </div>
-
-              {mode === "atacado" && (
-                <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-[#D9A94B]/20 bg-[#1B1712] p-4 font-mono text-xs text-[#9C9584]">
-                  <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-[#D9A94B]" />
-                  Pedidos de atacado passam por confirmação de CNPJ antes do faturamento. Condições de prazo disponíveis no pagamento.
-                </div>
-              )}
 
               <button
                 onClick={() => setCheckoutStep("pagamento")}
@@ -997,7 +821,7 @@ function CheckoutPage({
               </button>
             </div>
 
-            <OrderSummary entries={cartEntries} total={cartTotal} savings={atacadoSavings} mode={mode} />
+            <OrderSummary entries={cartEntries} total={cartTotal} />
           </div>
         )}
 
@@ -1006,7 +830,6 @@ function CheckoutPage({
             <div className="animate-fadeUp w-full max-w-full overflow-hidden">
               <h2 className="font-display text-2xl text-[#EFE7D6]">Forma de pagamento</h2>
 
-              {/* Botões ajustados para mobile */}
               <div className="mt-4 grid grid-cols-3 gap-2 w-full max-w-full">
                 {[
                   { id: "pix", label: "Pix", Icon: QrCode },
@@ -1029,10 +852,9 @@ function CheckoutPage({
               <div className="mt-6 w-full max-w-full overflow-hidden">
                 {paymentMethod === "pix" && <PixPanel total={cartTotal} onToast={setToast} />}
                 {paymentMethod === "cartao" && <CardPanel cardForm={cardForm} setCardForm={setCardForm} total={cartTotal} />}
-                {paymentMethod === "boleto" && <BoletoPanel mode={mode} total={cartTotal} />}
+                {paymentMethod === "boleto" && <BoletoPanel total={cartTotal} />}
               </div>
 
-              {/* Aviso formatado com break-words */}
               <div className="mt-6 flex items-center gap-2 rounded-xl border border-[#D9A94B]/15 bg-[#1B1712] p-3.5 font-mono text-[11px] text-[#7A7566] w-full max-w-full overflow-hidden">
                 <ShieldCheck className="h-4 w-4 shrink-0 text-[#D9A94B]" />
                 <span className="min-w-0 flex-1 break-words">Ambiente de demonstração — nenhum dado de pagamento é processado ou armazenado de verdade.</span>
@@ -1050,7 +872,7 @@ function CheckoutPage({
               </button>
             </div>
 
-            <OrderSummary entries={cartEntries} total={cartTotal} savings={atacadoSavings} mode={mode} />
+            <OrderSummary entries={cartEntries} total={cartTotal} />
           </div>
         )}
 
@@ -1111,7 +933,7 @@ function Field({ label, value, onChange, full }) {
   );
 }
 
-function OrderSummary({ entries, total, savings, mode }) {
+function OrderSummary({ entries, total }) {
   return (
     <div className="h-fit rounded-2xl border border-[#D9A94B]/15 bg-[#1B1712] p-5">
       <p className="font-display text-base text-[#EFE7D6]">Resumo do pedido</p>
@@ -1123,17 +945,10 @@ function OrderSummary({ entries, total, savings, mode }) {
           </div>
         ))}
       </div>
-      {savings > 0 && (
-        <div className="mt-3 flex items-center justify-between font-mono text-xs text-[#D9A94B]">
-          <span>economia de atacado</span>
-          <span>- {formatBRL(savings)}</span>
-        </div>
-      )}
       <div className="mt-3 flex items-center justify-between">
         <span className="font-display text-base text-[#EFE7D6]">Total</span>
         <span className="font-mono text-lg font-bold text-[#EFE7D6]">{formatBRL(total)}</span>
       </div>
-      <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-[#7A7566]">modo {mode}</p>
     </div>
   );
 }
@@ -1147,7 +962,6 @@ function PixPanel({ total, onToast }) {
       </div>
       <p className="mt-4 text-sm text-[#B3AC9B]">Escaneie o QR code ou copie o código Pix abaixo.</p>
       
-      {/* Botão ajustado com min-w-0 e break-all para conter a string no mobile */}
       <button
         onClick={() => {
           if (navigator.clipboard) navigator.clipboard.writeText(code);
@@ -1192,9 +1006,9 @@ function CardPanel({ cardForm, setCardForm, total }) {
   );
 }
 
-function BoletoPanel({ mode, total }) {
+function BoletoPanel({ total }) {
   const vencimento = new Date();
-  vencimento.setDate(vencimento.getDate() + (mode === "atacado" ? 28 : 3));
+  vencimento.setDate(vencimento.getDate() + 3);
   return (
     <div className="rounded-2xl border border-[#D9A94B]/15 bg-[#1B1712] p-5">
       <div className="flex items-center gap-3">
@@ -1204,23 +1018,16 @@ function BoletoPanel({ mode, total }) {
           <p className="font-mono text-[11px] text-[#7A7566]">vencimento em {vencimento.toLocaleDateString("pt-BR")}</p>
         </div>
       </div>
-      {mode === "atacado" && (
-        <p className="mt-4 font-mono text-[11px] text-[#D9A94B]">
-          condição especial de atacado: prazo de 28 dias para clientes com CNPJ aprovado.
-        </p>
-      )}
     </div>
   );
 }
 
-function ProductCard({ product, mode, inCart, onAdd }) {
+function ProductCard({ product, inCart, onAdd }) {
   const accent = ACCENTS[product.categoria];
   const available = product.estoque - inCart;
   const status = stockStatus(available, product.estoqueMax);
   const Icon = ICONS[product.categoria];
   const pct = Math.max(4, Math.round((available / product.estoqueMax) * 100));
-  const atacadoPrice = product.precoVarejo * (1 - product.descontoAtacado);
-  const quickQty = mode === "atacado" ? product.minAtacado : 1;
   const disabled = available <= 0;
 
   const toneClasses = {
@@ -1255,11 +1062,6 @@ function ProductCard({ product, mode, inCart, onAdd }) {
             {status.label}
           </span>
         )}
-        {mode === "atacado" && (
-          <span className="absolute bottom-3 right-3 rounded-full bg-gradient-to-r from-[#D9A94B] to-[#F0C572] px-2.5 py-1 font-mono text-[11px] font-bold text-[#120F0B]">
-            -{Math.round(product.descontoAtacado * 100)}%
-          </span>
-        )}
       </div>
 
       <div className="flex flex-1 flex-col p-4">
@@ -1272,21 +1074,9 @@ function ProductCard({ product, mode, inCart, onAdd }) {
         <div className="mt-3">
           <div className="flex items-baseline gap-2">
             <span className="font-display text-2xl font-semibold text-[#EFE7D6]">
-              {formatBRL(mode === "atacado" ? atacadoPrice : product.precoVarejo)}
+              {formatBRL(product.preco)}
             </span>
-            {mode === "atacado" && (
-              <span className="font-mono text-xs text-[#7A7566] line-through">{formatBRL(product.precoVarejo)}</span>
-            )}
           </div>
-          {mode === "atacado" ? (
-            <p className={`mt-0.5 font-mono text-[10px] ${accent.text}`}>
-              -{Math.round(product.descontoAtacado * 100)}% a partir de {product.minAtacado} un.
-            </p>
-          ) : (
-            <p className="mt-0.5 font-mono text-[10px] text-[#7A7566]">
-              atacado: {formatBRL(atacadoPrice)}/un. a partir de {product.minAtacado} un.
-            </p>
-          )}
         </div>
 
         <div className="mt-3">
@@ -1305,16 +1095,12 @@ function ProductCard({ product, mode, inCart, onAdd }) {
         </div>
 
         <button
-          onClick={() => onAdd(quickQty)}
+          onClick={() => onAdd(1)}
           disabled={disabled}
           className={`mt-4 flex items-center justify-center gap-2 rounded-full border py-2.5 text-xs font-semibold text-[#EFE7D6] transition-colors disabled:cursor-not-allowed disabled:opacity-30 sm:text-sm ${accent.border} ${accent.borderHover} hover:${accent.bg}`}
         >
           <Plus className={`h-3.5 w-3.5 ${accent.text}`} />
-          {disabled
-            ? "Esgotado"
-            : mode === "atacado"
-            ? `Adicionar caixa (${product.minAtacado} un.)`
-            : "Adicionar"}
+          {disabled ? "Esgotado" : "Adicionar"}
         </button>
       </div>
     </div>
